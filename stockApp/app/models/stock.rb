@@ -2,6 +2,11 @@ class Stock < ActiveRecord::Base
     has_many :prices
     belongs_to :portfolio
 
+    def saveCurrentDate
+        self.date = Time.now
+        self.save
+    end
+
     def findByTicker
     end
 
@@ -22,5 +27,10 @@ class Stock < ActiveRecord::Base
 
     def getDailyPriceAndVolume
         #get the price and volume info for a stock daily (may need scheduling gem)
+        dailyPrice = new Price();
+        dailyPrice.stock_id = self.id
+        dailyPrice.retrievePriceFromWeb
+        dailyPrice.saveDateInformation
+        dailyPrice.save
     end
 end

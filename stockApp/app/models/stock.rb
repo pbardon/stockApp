@@ -5,7 +5,7 @@ class Stock < ActiveRecord::Base
     belongs_to :portfolio
 
     def self.find_by_ticker(symbol)
-        if stock = Stock.find_by( symbol: symbol)
+        if stock = Stock.find_by( ticker: symbol)
             return stock
         else
             return false
@@ -23,14 +23,13 @@ class Stock < ActiveRecord::Base
         end
     end
 
-    def save_current_date
-        self.date = Time.now
-        self.save
-    end
-
     def get_current_price
-        price = prices.where("date > ?", 1.day.ago).take
-        price.close
+        prices = self.prices.where("date > ?", 1.day.ago)
+        if price = prices.take
+            price.close
+        else
+            return false
+        end
     end
 
     def get_prices_between_dates(start_date, end_date)
@@ -39,11 +38,8 @@ class Stock < ActiveRecord::Base
 
     def get_daily_price_and_volume
         #get the price and volume info for a stock daily (may need scheduling gem)
-        daily_price = Price.new();
-        daily_price.stock_id = self.id
-        daily_price.retrieve_price_from_web(self.ticker)
-        daily_price.save_date_information
-        if daily_price.save
+        daily_price = Price.create_daily_price(self);
+        if daily_price
             return daily_price
         else
             return false

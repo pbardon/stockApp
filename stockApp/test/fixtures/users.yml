@@ -1,5 +1,6 @@
 jim:
-    name: jimlahey
+    name: jim
+    username: jimlahey
     funds: 10000.00
 
 steve:

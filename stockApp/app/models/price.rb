@@ -7,6 +7,18 @@ class Price < ActiveRecord::Base
         doc = Nokogiri::HTML(open(web_address));
     end
 
+    def self.create_daily_price(stock)
+        daily_price = Price.new
+        daily_price.stock_id = stock.id
+        daily_price.retrieve_price_from_web(stock.ticker)
+        daily_price.save_date_information
+        if daily_price.save
+            return daily_price
+        else
+            return false
+        end
+    end
+
     def self.get_marketwatch_page(ticker)
         url = self.construct_marketwatch_url(ticker)
         get_web_page(url)
@@ -37,10 +49,20 @@ class Price < ActiveRecord::Base
     def retrieve_price_from_web(symbol)
         # retrieve price and volume information for the day
         self.close = Price.get_price_info_from_web(symbol)
-        puts self
+        if self.save
+            return self.close
+        else
+            return false
+        end
     end
 
     def save_date_information
+        self.date = Time.now
+        if self.save
+            return self.date
+        else
+            false
+        end
     end
 
 end

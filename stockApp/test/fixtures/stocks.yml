@@ -1,1 +1,13 @@
+apple:
+    ticker: 'AAPL'
+    current_price:
 
+google:
+    ticker: 'GOOGL'
+    current_price:
+goldmansachs:
+        ticker: 'GS'
+        current_price:
+disney:
+        ticker: 'DIS'
+        current_price:

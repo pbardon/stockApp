@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
     has_many :portfolios, dependent: :destroy
 
     def self.find_by_username(username)
-        user = User.find_by name: username
+        user = User.find_by username: username
         if user
             return user
         else
